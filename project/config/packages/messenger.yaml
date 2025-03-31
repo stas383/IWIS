@@ -1,0 +1,25 @@
+framework:
+    messenger:
+        default_bus: messenger.bus.default
+        transports:
+            async:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: messages
+                        type: direct
+                    queues:
+                        messages: ~
+                retry_strategy:
+                    max_retries: 3
+                    delay: 1000
+                    multiplier: 2
+                    max_delay: 0
+        routing:
+            # Додаємо кастомні команди по мірі реалізації
+            'App\Application\Command\ImportProductCommand': async
+        buses:
+            messenger.bus.default:
+                default_middleware: allow_no_handlers
+                middleware:
+                    - validation
